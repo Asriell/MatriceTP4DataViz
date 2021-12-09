@@ -11,16 +11,16 @@
 		<div id="visu-tp4"></div>
     <script>
       // Definition de la taille du svg
-      const margin = { top: 60, right: 30, bottom: 20, left: 60 },
-        width = 1920,
+      const margin = { top: 60, right: 0, bottom: 0, left: 60 },
+        width = 720,
         height = 1080;
 
       // ajout du svg à une 'div id="matrice"' déjà créee dans la page html
       var svg = d3
         .select("#visu-tp4")
         .append("svg")
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", width + margin.left)
+        .attr("height", height + margin.top)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
@@ -58,20 +58,31 @@
 
         var labels = d3.select("svg")
           .append("g")
-          .attr("transform", "translate(" + margin.top  + "," +  (margin.left + ((width/(json.nodes.length))/2)+1) + ")")
+          .attr("transform", "translate(" + margin.top  + "," +  margin.left  + ")")
           .style("font-size","10px")
           .style("font-family", "sans-serif");
 
         //console.log(echellexy(5))
         maxString = d3.max(json.nodes,(d) => d.character.length)
         console.log("maxString : " + maxString)
+
         var rows = labels
+          .append("g")
+          .selectAll()
+          .data(json.nodes)
+          .join("text")
+          .attr("transform",(d)=> {return "translate( -" + (maxString*5)  + ","+ ((d.id*height/json.nodes.length) + ((height/(json.nodes.length))/2)+2) + ")"})
+          .html((d) => {return d.character;})
+
+          /*
+          var columns = labels
           .append("g")
           .selectAll()
           .data(json.nodes)
           .join("text")
           .attr("transform",(d)=> {return "translate( -" + (maxString*5)  + ","+ (d.id*height/json.nodes.length) + ")"})
           .html((d) => {return d.character;})
+          .attr("transform", "rotate(-90)");*/
           
       });
     </script>
