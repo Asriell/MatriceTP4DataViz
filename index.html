@@ -11,9 +11,9 @@
 		<div id="visu-tp4"></div>
     <script>
       // Definition de la taille du svg
-      const margin = { top: 0, right: 30, bottom: 20, left: 10 },
-        width = 960,
-        height = 960;
+      const margin = { top: 60, right: 30, bottom: 20, left: 60 },
+        width = 1920,
+        height = 1080;
 
       // ajout du svg à une 'div id="matrice"' déjà créee dans la page html
       var svg = d3
@@ -32,23 +32,47 @@
         console.log("max : ",maxWeight)
         //console.log(matrix)
         var scale = d3.scaleQuantize().domain([0, maxWeight]).range(d3.schemeBlues[9]); // donné par D3
+
         matrixViz = svg.selectAll("rect")
           .data(matrix)
           .join("rect")
           .attr("width", width/json.nodes.length)
           .attr("height", height/json.nodes.length)
-          .attr("x", function (d) {
-            return d.x * width/json.nodes.length;
-          })
-	        .attr("y", function (d) {
-            return d.y * height/json.nodes.length;
-          })
+          .attr("x", (d) => {return d.x * width/json.nodes.length;})
+	        .attr("y", (d) => {return d.y * height/json.nodes.length;})
           .style("stroke", "black")
           .style("stroke-width", ".2px")
-          .style("fill", function (d) {
-            return scale(d.weight);
-          })
-        console.log("ok")
+          .style("fill", (d) => {return scale(d.weight);});
+
+
+        var positionsPersonnages = d3.range(json.nodes.length);	// un tableau d'autant d'element que de personnages 
+        console.log(positionsPersonnages);
+
+        var echellexy = d3.scaleBand()
+          .range([0,width])
+          .domain(positionsPersonnages) 
+          .paddingInner(0.1) 
+          .align(0)
+          .round(true);
+
+
+        var labels = d3.select("svg")
+          .append("g")
+          .attr("transform", "translate(" + margin.top  + "," +  (margin.left + ((width/(json.nodes.length))/2)+1) + ")")
+          .style("font-size","10px")
+          .style("font-family", "sans-serif");
+
+        //console.log(echellexy(5))
+        maxString = d3.max(json.nodes,(d) => d.character.length)
+        console.log("maxString : " + maxString)
+        var rows = labels
+          .append("g")
+          .selectAll()
+          .data(json.nodes)
+          .join("text")
+          .attr("transform",(d)=> {return "translate( -" + (maxString*5)  + ","+ (d.id*height/json.nodes.length) + ")"})
+          .html((d) => {return d.character;})
+          
       });
     </script>
   </body>
