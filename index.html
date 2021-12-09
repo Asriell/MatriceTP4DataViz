@@ -26,7 +26,7 @@
 
 
       AdjMatrix = d3.json("got_social_graph.json").then((json) => {
-        matrix = createAdjacencyMatrix(json.nodes, json.links);
+        matrix = createAdjacencyMatrix(json.nodes, json.links, undefined, true);
         console.log("json : ",json)
         maxWeight = d3.max(matrix, (d) => {return d.weight;})
         console.log("max : ",maxWeight)
@@ -82,7 +82,6 @@
           .join("text")
           .attr("transform",(d)=> {return "rotate(-90) translate( " + maxString  + ","+ ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2) + ")"})
           .html((d) => {return d.character;})
-          //.attr("transform", "");
           
       });
     </script>
