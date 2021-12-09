@@ -12,7 +12,7 @@
     <script>
       // Definition de la taille du svg
       const margin = { top: 60, right: 0, bottom: 0, left: 60 },
-        width = 720,
+        width = 1920,
         height = 1080;
 
       // ajout du svg à une 'div id="matrice"' déjà créee dans la page html
@@ -74,15 +74,15 @@
           .attr("transform",(d)=> {return "translate( -" + (maxString*5)  + ","+ ((d.id*height/json.nodes.length) + ((height/(json.nodes.length))/2)+2) + ")"})
           .html((d) => {return d.character;})
 
-          /*
+          
           var columns = labels
           .append("g")
           .selectAll()
           .data(json.nodes)
           .join("text")
-          .attr("transform",(d)=> {return "translate( -" + (maxString*5)  + ","+ (d.id*height/json.nodes.length) + ")"})
+          .attr("transform",(d)=> {return "rotate(-90) translate( " + maxString  + ","+ ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2) + ")"})
           .html((d) => {return d.character;})
-          .attr("transform", "rotate(-90)");*/
+          //.attr("transform", "");
           
       });
     </script>
