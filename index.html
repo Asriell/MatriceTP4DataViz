@@ -1,16 +1,55 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src=https://lyondataviz.github.io/teaching/lyon1-m2/2021/data/matrixManagement.js></script>
+  </head>
 
-<head>
-	<title>Parcel Sandbox</title>
-	<meta charset="UTF-8" />
-</head>
+  <body>
+		<div id="app"></div>
+    <script>
+      // Definition de la taille du svg
+      const margin = { top: 0, right: 30, bottom: 20, left: 10 },
+        width = 960,
+        height = 960;
 
-<body>
-	<div id="app"></div>
+      // ajout du svg à une 'div id="matrice"' déjà créee dans la page html
+      var svg = d3
+        .select("#visu-tp4")
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-	<script src="src/index.js">
-	</script>
-</body>
 
+      AdjMatrix = d3.json("got_social_graph.json").then((json) => {
+        matrix = createAdjacencyMatrix(json.nodes, json.links);
+        console.log("json : ",json)
+        maxWeight = d3.max(matrix, (d) => {return d.weight;})
+        console.log("max : ",maxWeight)
+        //console.log(matrix)
+        var scale = d3.scaleQuantize().domain([0, maxWeight]).range(d3.schemeBlues[9]); // donné par D3
+        matrixViz = svg.selectAll("rect")
+          .data(matrix)
+          .join("rect")
+          .attr("width", width)
+          .attr("height", height)
+          .attr("x", function (d) {
+            return d.x;
+          })
+	        .attr("y", function (d) {
+            return d.y;
+          })
+          .style("stroke", "black")
+          .style("stroke-width", ".2px")
+          .style("fill", function (d) {
+            return scale(d.weight);
+          })
+        console.log("ok")
+      });
+    </script>
+  </body>
 </html>
