@@ -12,8 +12,8 @@
     <script>
       // Definition de la taille du svg
       const margin = { top: 60, right: 0, bottom: 0, left: 60 },
-        width = 1920,
-        height = 1080;
+        width = 960,
+        height = 960;
 
       // ajout du svg à une 'div id="matrice"' déjà créee dans la page html
       var svg = d3
@@ -32,6 +32,7 @@
         console.log("max : ",maxWeight)
         //console.log(matrix)
         var scale = d3.scaleQuantize().domain([0, maxWeight]).range(d3.schemeBlues[9]); // donné par D3
+        var zoneScale = d3.scaleOrdinal(d3.schemeCategory10);
 
         matrixViz = svg.selectAll("rect")
           .data(matrix)
@@ -42,7 +43,8 @@
 	        .attr("y", (d) => {return d.y * height/json.nodes.length;})
           .style("stroke", "black")
           .style("stroke-width", ".2px")
-          .style("fill", (d) => {return scale(d.weight);});
+          //.style("fill", (d) => {return scale(d.weight);})
+          .style("fill", (d) => {return (d.zone_s == d.zone_t && d.name_s != d.name_t ? zoneScale(d.weight * 10):"#eee");});
 
 
         var positionsPersonnages = d3.range(json.nodes.length);	// un tableau d'autant d'element que de personnages 
