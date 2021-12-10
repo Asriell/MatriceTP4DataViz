@@ -8,12 +8,19 @@
   </head>
 
   <body>
+      <label for="pet-select">Arrangement des éléments : </label>
+
+      <select name="arrangement" id="arrangement-select">
+          <option value="appearances">Appearances</option>
+          <option value="zones">Zones</option>
+          <option value="influences">Influences</option>
+      </select>
 		<div id="visu-tp4"></div>
     <script>
       // Definition de la taille du svg
       const margin = { top: 60, right: 0, bottom: 0, left: 60 },
-        width = 960,
-        height = 960;
+        width = 1920,
+        height = 1080;
 
       // ajout du svg à une 'div id="matrice"' déjà créee dans la page html
       var svg = d3
@@ -44,7 +51,8 @@
           .style("stroke", "black")
           .style("stroke-width", ".2px")
           //.style("fill", (d) => {return scale(d.weight);})
-          .style("fill", (d) => {return (d.zone_s == d.zone_t && d.name_s != d.name_t ? zoneScale(d.weight * 10):"#eee");});
+          .style("fill", (d) => {return (d.zone_s == d.zone_t && d.name_s != d.name_t ? zoneScale(d.weight):"#eee");})
+          .style("opacity",(d) => {return (d.weight*10)/100;});
 
 
         var positionsPersonnages = d3.range(json.nodes.length);	// un tableau d'autant d'element que de personnages 
@@ -84,8 +92,14 @@
           .join("text")
           .attr("transform",(d)=> {return "rotate(-90) translate( " + maxString  + ","+ ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2) + ")"})
           .html((d) => {return d.character;})
+
+          d3.select("#arrangement-select").on("change",(d)=>{
+            console.log(d.target.value);
+          });
           
       });
+
+
     </script>
   </body>
 </html>
