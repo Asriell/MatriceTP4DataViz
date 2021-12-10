@@ -52,20 +52,20 @@
           .style("stroke-width", ".2px")
           //.style("fill", (d) => {return scale(d.weight);})
           .style("fill", (d) => {return (d.zone_s == d.zone_t && d.name_s != d.name_t ? zoneScale(d.weight):"#eee");})
-          .style("opacity",(d) => {return (d.weight*10)/100;});
+          //.style("opacity",(d) => {return (d.weight*10)/100;});
 
 
         var positionsPersonnages = d3.range(json.nodes.length);	// un tableau d'autant d'element que de personnages 
         console.log(positionsPersonnages);
 
         var echellexy = d3.scaleBand()
-          .range([0,width])
+          .range([0,height])
           .domain(positionsPersonnages) 
           .paddingInner(0.1) 
           .align(0)
           .round(true);
 
-
+console.log(positionsPersonnages.map((d)=>echellexy(d)))
         var labels = d3.select("svg")
           .append("g")
           .attr("transform", "translate(" + margin.top  + "," +  margin.left  + ")")
@@ -81,7 +81,10 @@
           .selectAll()
           .data(json.nodes)
           .join("text")
-          .attr("transform",(d)=> {return "translate( -" + (maxString*5)  + ","+ ((d.id*height/json.nodes.length) + ((height/(json.nodes.length))/2)+2) + ")"})
+          //.attr("transform",(d)=> {return "translate( -" + (maxString*5)  + ","+ ((d.id*height/json.nodes.length) + ((height/(json.nodes.length))/2)+2) + ")"})
+          .attr("dx",- (maxString*5))
+          .attr("dy",(d) => ((d.id*height/json.nodes.length) + ((height/(json.nodes.length))/2)+2))
+          //.attr("dy",(d) => echellexy(d.id) + (height/json.nodes.length))
           .html((d) => {return d.character;})
 
           
@@ -90,7 +93,11 @@
           .selectAll()
           .data(json.nodes)
           .join("text")
-          .attr("transform",(d)=> {return "rotate(-90) translate( " + maxString  + ","+ ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2) + ")"})
+          //.attr("transform",(d)=> {return "rotate(-90) translate( " + maxString  + ","+ ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2) + ")"})
+          //.attr("transform",(d)=> {return "rotate(-90) translate( " + maxString  + ","+ ((echellexy(d.id)*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2) + ")"})
+          .attr("dx",maxString)
+          .attr("dy",(d) => ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2))
+          .attr("transform",(d)=> {return "rotate(-90)"})
           .html((d) => {return d.character;})
 
           d3.select("#arrangement-select").on("change",(d)=>{
