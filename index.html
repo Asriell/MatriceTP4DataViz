@@ -51,21 +51,30 @@
           .style("stroke", "black")
           .style("stroke-width", ".2px")
           //.style("fill", (d) => {return scale(d.weight);})
-          .style("fill", (d) => {return (d.zone_s == d.zone_t && d.name_s != d.name_t ? zoneScale(d.weight):"#eee");})
-          //.style("opacity",(d) => {return (d.weight*10)/100;});
+          .style("fill", (d) => {return (d.zone_s == d.zone_t && d.name_s != d.name_t ? zoneScale(d.zone_s):"#eee");})//zoneScale(d.zone_s)
+          .style("opacity",(d) => {return (d.weight*10)/100;});
 
 
         var positionsPersonnages = d3.range(json.nodes.length);	// un tableau d'autant d'element que de personnages 
         console.log(positionsPersonnages);
 
-        var echellexy = d3.scaleBand()
-          .range([0,height])
+        var echelley = d3.scaleBand()
+          //.range([0,height])// [0,5*json.nodes.length]
+          .range([0,json.nodes.length*height/json.nodes.length])
           .domain(positionsPersonnages) 
           .paddingInner(0.1) 
           .align(0)
-          .round(true);
+          .round(false);
 
-console.log(positionsPersonnages.map((d)=>echellexy(d)))
+          var echellex = d3.scaleBand()
+          //.range([0,height])// [0,5*json.nodes.length]
+          .range([0,json.nodes.length*width/json.nodes.length])
+          .domain(positionsPersonnages) 
+          .paddingInner(0.1) 
+          .align(0)
+          .round(false);
+
+        console.log(positionsPersonnages.map((d)=>echelley(d)))
         var labels = d3.select("svg")
           .append("g")
           .attr("transform", "translate(" + margin.top  + "," +  margin.left  + ")")
@@ -83,8 +92,8 @@ console.log(positionsPersonnages.map((d)=>echellexy(d)))
           .join("text")
           //.attr("transform",(d)=> {return "translate( -" + (maxString*5)  + ","+ ((d.id*height/json.nodes.length) + ((height/(json.nodes.length))/2)+2) + ")"})
           .attr("dx",- (maxString*5))
-          .attr("dy",(d) => ((d.id*height/json.nodes.length) + ((height/(json.nodes.length))/2)+2))
-          //.attr("dy",(d) => echellexy(d.id) + (height/json.nodes.length))
+          //.attr("dy",(d) => ((d.id*height/json.nodes.length) + ((height/(json.nodes.length))/2)+2))//echellexy(d.id)+5
+          .attr("dy",(d) => (echelley(d.id) + ((height/(json.nodes.length))/2)+4) )
           .html((d) => {return d.character;})
 
           
@@ -96,7 +105,8 @@ console.log(positionsPersonnages.map((d)=>echellexy(d)))
           //.attr("transform",(d)=> {return "rotate(-90) translate( " + maxString  + ","+ ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2) + ")"})
           //.attr("transform",(d)=> {return "rotate(-90) translate( " + maxString  + ","+ ((echellexy(d.id)*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2) + ")"})
           .attr("dx",maxString)
-          .attr("dy",(d) => ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2))
+          //.attr("dy",(d) => ((d.id*width/json.nodes.length) + ((width/(json.nodes.length))/2)+2))
+          .attr("dy",(d) => (echellex(d.id) + ((width/(json.nodes.length))/2)+2))
           .attr("transform",(d)=> {return "rotate(-90)"})
           .html((d) => {return d.character;})
 
