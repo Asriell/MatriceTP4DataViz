@@ -8,7 +8,8 @@
   </head>
 
   <body>
-      <label for="pet-select">Arrangement des éléments : </label>
+    <h1> Classification des Personnages de Game of Thrones par apparition/zone/influence</h1>
+      <label for="arrangement-select">Arrangement des éléments : </label>
 
       <select name="arrangement" id="arrangement-select">
           <option value="appearances">Appearances</option>
@@ -17,6 +18,7 @@
       </select>
 		<div id="visu-tp4"></div>
     <script>
+      document.getElementById("arrangement-select").value="appearances"
       // Definition de la taille du svg
       const margin = { top: 60, right: 0, bottom: 0, left: 60 },
         width = 1920,
@@ -138,14 +140,14 @@
                   .duration(1000)
                   .attr("dy",(d) => (echelley(d.id) + ((height/(json.nodes.length))/2)+2));
                 columns.transition()
-                  .delay(0) 
+                  .delay(500) 
                   .duration(1000)
                   .attr("dy",(d) => (echellex(d.id) + ((width/(json.nodes.length))/2)+2));
 
 
                 echellexyMatrix.domain(positionsPersonnages)
                 svg.selectAll("rect").transition()
-                  .delay(0) 
+                  .delay(1500) 
                   .duration(1000)
                   .attr("x",(d)=>{return echellexyMatrix(d.x) * width/json.nodes.length;})
                   .attr("y",(d)=>{return echellexyMatrix(d.y) * height/json.nodes.length;});
@@ -161,15 +163,13 @@
                   .attr("dy",(d) => (echelley(d.id) + ((height/(json.nodes.length))/2)+2));
 
                 columns.transition()
-                  .delay(0) 
+                  .delay(500) 
                   .duration(1000)
                   .attr("dy",(d) => (echellex(d.id) + ((width/(json.nodes.length))/2)+2));
 
-
-
                 echellexyMatrix.domain(zonesPersonnages)
                 svg.selectAll("rect").transition()
-                  .delay(0) 
+                  .delay(1500) 
                   .duration(1000)
                   .attr("x",(d)=>{return echellexyMatrix(d.x) * width/json.nodes.length;})
                   .attr("y",(d)=>{return echellexyMatrix(d.y) * height/json.nodes.length;});
@@ -184,14 +184,13 @@
                   .duration(1000)
                   .attr("dy",(d) => (echelley(d.id) + ((height/(json.nodes.length))/2)+2));
                 columns.transition()
-                  .delay(0) 
+                  .delay(500) 
                   .duration(1000)
                   .attr("dy",(d) => (echellex(d.id) + ((width/(json.nodes.length))/2)+2));
 
-
                 echellexyMatrix.domain(influencesPersonnages)
                 svg.selectAll("rect").transition()
-                  .delay(0) 
+                  .delay(1500) 
                   .duration(1000)
                   .attr("x",(d)=>{return echellexyMatrix(d.x) * width/json.nodes.length;})
                   .attr("y",(d)=>{return echellexyMatrix(d.y) * height/json.nodes.length;});
