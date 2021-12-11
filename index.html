@@ -56,7 +56,11 @@
 
 
         var positionsPersonnages = d3.range(json.nodes.length);	// un tableau d'autant d'element que de personnages 
-        console.log(positionsPersonnages);
+        console.log("position des personnages : ",positionsPersonnages);
+        var zonesPersonnages = groupBySameValues(json,"zone");
+        console.log("groupement des personnages par zone : ",zonesPersonnages);
+        var influencesPersonnages = groupBySameValues(json,"influence");
+        console.log("groupement des personnages par influence : ",influencesPersonnages);
 
         var echelley = d3.scaleBand()
           //.range([0,height])// [0,5*json.nodes.length]
@@ -74,7 +78,7 @@
           .align(0)
           .round(false);
 
-        console.log(positionsPersonnages.map((d)=>echelley(d)))
+        console.log("echelle pour les positions : " ,positionsPersonnages.map((d)=>echelley(d)))
         var labels = d3.select("svg")
           .append("g")
           .attr("transform", "translate(" + margin.top  + "," +  margin.left  + ")")
@@ -110,13 +114,59 @@
           .attr("transform",(d)=> {return "rotate(-90)"})
           .html((d) => {return d.character;})
 
-          d3.select("#arrangement-select").on("change",(d)=>{
-            console.log(d.target.value);
+          d3.select("#arrangement-select").on("change",(label)=>{
+            switch(label.target.value){
+              case "appearances":
+                console.log("appearances");
+                console.log("echelle pour les positions : " ,positionsPersonnages.map((d)=>echelley(d)))
+                echelley.domain(positionsPersonnages)
+                echellex.domain(positionsPersonnages)
+                rows.attr("dy",(d) => (echelley(d.id) + ((height/(json.nodes.length))/2)+2));
+                columns.attr("dy",(d) => (echellex(d.id) + ((width/(json.nodes.length))/2)+2));
+                break;
+              case "zones":
+                console.log("zones");
+                console.log("echelle pour les zones : " ,zonesPersonnages.map((d)=>echelley(d)))
+                echellex.domain(zonesPersonnages)
+                echelley.domain(zonesPersonnages)
+                rows.attr("dy",(d) => (echelley(d.id) + ((height/(json.nodes.length))/2)+2));
+                columns.attr("dy",(d) => (echellex(d.id) + ((width/(json.nodes.length))/2)+2));
+                break;
+              case "influences":
+                console.log("influences");
+                console.log("echelle pour les influences : " ,influencesPersonnages.map((d)=>echelley(d)))
+                echellex.domain(influencesPersonnages)
+                echelley.domain(influencesPersonnages)
+                rows.attr("dy",(d) => (echelley(d.id) + ((height/(json.nodes.length))/2)+2));
+                columns.attr("dy",(d) => (echellex(d.id) + ((width/(json.nodes.length))/2)+2));
+                break;
+            }
           });
           
       });
 
 
+
+function groupBySameValues(json, key) {
+  var keysArray = json.nodes.map((d)=>d[key])
+  valuesDistincts = []
+  groupedValues = []
+  for(value of keysArray) {
+    if (!valuesDistincts.includes(value)) {
+      valuesDistincts.push(value)
+    }
+  }//On ne garde que les valeurs une seule fois
+
+
+  for(value of valuesDistincts) {
+    json.nodes.map((d)=>{
+      if(d[key]==value) {
+        groupedValues.push(d.id);
+      }
+    })
+  }//Groupement des personnages par valeur
+  return groupedValues;
+}
     </script>
   </body>
 </html>
